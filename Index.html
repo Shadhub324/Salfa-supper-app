@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SalFa – Onboarding Intro</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ------------------------------------------------------------------
+       Mode‑aware CSS variables
+    ------------------------------------------------------------------ */
+    :root {
+      /* default = light mode */
+      --bg-gradient: linear-gradient(135deg, #e3f2fd, #e8f5e9);
+      --text-color : #0d0d0d;
+      --glass-bg   : rgba(255, 255, 255, 0.38);
+      --glass-brd  : rgba(0, 0, 0, 0.12);
+    }
+    [data-mode="dark"] {
+      --bg-gradient: linear-gradient(135deg, #1e88e5, #43a047);
+      --text-color : #ffffff;
+      --glass-bg   : rgba(255, 255, 255, 0.12);
+      --glass-brd  : rgba(255, 255, 255, 0.28);
+    }
+
+    /* ------------------------------------------------------------------
+       Global styles
+    ------------------------------------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: "Poppins", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      overflow-x: hidden;   /* no horizontal scroll */
+      overflow-y: auto;     /* allow vertical scroll if content overflows */
+    }
+    button { font-family: inherit; }
+
+    /* ------------------------------------------------------------------
+       Layout container
+    ------------------------------------------------------------------ */
+    .onboarding-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(1rem, 4vw, 1.6rem);
+      padding: clamp(0.75rem, 3.5vw, 1.25rem);
+      position: relative;
+    }
+
+    /* ------------------------------------------------------------------
+       Splash screen
+    ------------------------------------------------------------------ */
+    .splash {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+      z-index: 10;
+      animation: fadeOut 1s forwards 3.5s;
+    }
+    .logo {
+      font-size: clamp(2.6rem, 8vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #43a047;
+      user-select: none;
+      animation: bounceIn 3.2s forwards;
+    }
+    .logo span { color: #ffffff; }
+
+    /* ------------------------------------------------------------------
+       Onboarding step cards (glassmorphism)
+    ------------------------------------------------------------------ */
+    .step {
+      width: 100%;
+      max-width: 380px;
+      padding: clamp(1.4rem, 5vw, 2.25rem) clamp(1rem, 4vw, 1.8rem);
+      text-align: center;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-brd);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transform: translateY(30px);
+      opacity: 0;
+      animation-fill-mode: forwards; /* allow fadeInUp to keep final state */
+    }
+    .step h2 {
+      font-size: clamp(1.4rem, 5vw, 1.9rem);
+      margin: 0 0 0.8rem;
+    }
+    .step p {
+      font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* ------------------------------------------------------------------
+       Buttons
+    ------------------------------------------------------------------ */
+    .buttons { margin-top: clamp(1.4rem, 5vw, 2rem); }
+    .buttons button {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-brd);
+      padding: 0.65rem 2.2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-color);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: background 0.3s;
+    }
+    .buttons button:hover { background: rgba(67, 160, 71, 0.85); }
+
+    /* ------------------------------------------------------------------
+       Key‑frame animations
+    ------------------------------------------------------------------ */
+    @keyframes bounceIn {
+      0%   { opacity: 0; transform: translateY(-120px) scale(0.5); }
+      60%  { opacity: 1; transform: translateY(20px)  scale(1.1); }
+      100% { transform: translateY(0)      scale(1);   }
+    }
+    @keyframes fadeOut { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* ------------------------------------------------------------------
+       Short‑screen tweak (very small height devices)
+    ------------------------------------------------------------------ */
+    @media (max-height: 650px) {
+      .onboarding-container { gap: 0.7rem; }
+      .step { padding: 1.2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="onboarding-container">
+
+    <!-- Splash Screen -->
+    <div class="splash" id="splashScreen">
+      <div class="logo">Sal<span>Fa</span></div>
+    </div>
+
+    <!-- Onboarding Step 1 -->
+    <div class="step" id="step1" style="animation-delay: 4.5s;">
+      <h2 data-i18n="step1Title">Welcome to SalFa!</h2>
+      <p  data-i18n="step1Desc">Learn easily and quickly with well‑structured lessons.</p>
+    </div>
+
+    <!-- Onboarding Step 2 -->
+    <div class="step" id="step2" style="display:none; animation-delay: 6.5s;">
+      <h2 data-i18n="step2Title">Track Your Progress</h2>
+      <p  data-i18n="step2Desc">Monitor your progress and schedule study sessions effortlessly.</p>
+    </div>
+
+    <!-- Onboarding Step 3 -->
+    <div class="step" id="step3" style="display:none; animation-delay: 8.5s;">
+      <h2 data-i18n="step3Title">Unlock New Opportunities</h2>
+      <p  data-i18n="step3Desc">Get support, guidance and extra resources anytime.</p>
+      <div class="buttons">
+        <button id="startBtn" data-i18n="startBtn">Get Started</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /* ------------------------------------------------------------
+         1️⃣ Read preferences from localStorage (set via setting.html)
+         ------------------------------------------------------------ */
+      const langPref  = localStorage.getItem("lang")  || localStorage.getItem("language") || "en"; // legacy fallback
+      const modePref  = localStorage.getItem("mode")  || "light";                               // "light" | "dark"
+      document.documentElement.dataset.mode = modePref;
+
+      /* ------------------------------------------------------------
+         2️⃣ Translation dictionary
+         ------------------------------------------------------------ */
+      const translations = {
+        en: {
+          step1Title: "Welcome to SalFa!",
+          step1Desc : "Learn easily and quickly with well‑structured lessons.",
+          step2Title: "Track Your Progress",
+          step2Desc : "Monitor your progress and schedule study sessions effortlessly.",
+          step3Title: "Unlock New Opportunities",
+          step3Desc : "Get support, guidance and extra resources anytime.",
+          startBtn  : "Get Started"
+        },
+        sw: {
+          step1Title: "Karibu SalFa!",
+          step1Desc : "Jifunze kwa urahisi na haraka kupitia masomo yaliyoainishwa vizuri.",
+          step2Title: "Fuatilia Maendeleo",
+          step2Desc : "Angalia maendeleo yako na panga ratiba ya masomo kwa urahisi.",
+          step3Title: "Fungua Fursa Mpya",
+          step3Desc : "Pata msaada, ushauri na rasilimali za ziada kila wakati.",
+          startBtn  : "Anza Sasa"
+        },
+        fr: {
+          step1Title: "Bienvenue chez SalFa !",
+          step1Desc : "Apprenez facilement et rapidement grâce à des leçons bien structurées.",
+          step2Title: "Suivez votre Progrès",
+          step2Desc : "Surveillez vos progrès et planifiez vos séances d'étude facilement.",
+          step3Title: "Débloquez de nouvelles Opportunités",
+          step3Desc : "Obtenez soutien, conseils et ressources supplémentaires à tout moment.",
+          startBtn  : "Commencer"
+        }
+      };
+
+      /* ------------------------------------------------------------
+         3️⃣ Apply language to DOM
+         ------------------------------------------------------------ */
+      const dict = translations[langPref] || translations.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      /* ------------------------------------------------------------
+         4️⃣ Onboarding flow (splash -> steps)
+         ------------------------------------------------------------ */
+      const splash = document.getElementById("splashScreen");
+      const steps  = [document.getElementById("step1"), document.getElementById("step2"), document.getElementById("step3")];
+
+      setTimeout(() => {
+        splash.style.display = "none";
+        showStep(0);
+      }, 4000);
+
+      let currentStep = 0;
+      function showStep(i) {
+        if (i > 0) steps[i - 1].style.display = "none";
+        steps[i].style.display = "block";
+        steps[i].style.animation = "fadeInUp 1s forwards";
+        currentStep = i;
+      }
+
+      const autoAdvance = setInterval(() => {
+        if (currentStep < steps.length - 1) {
+          showStep(currentStep + 1);
+        } else {
+          clearInterval(autoAdvance);
+        }
+      }, 3000);
+
+      /* ------------------------------------------------------------
+         5️⃣ Start button -> navigate to app home
+         ------------------------------------------------------------ */
+      document.getElementById("startBtn").addEventListener("click", () => {
+        window.location.href = "index.html"; // adjust path if necessary
+      });
+    });
+  </script>
+</body>
+</html>
