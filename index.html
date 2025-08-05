@@ -1,0 +1,68 @@
+      /* ------------------------------------------------------------
+         2️⃣ Translation dictionary
+         ------------------------------------------------------------ */
+      const translations = {
+        en: {
+          step1Title: "Welcome to SalFa!",
+          step1Desc : "Learn easily and quickly with well‑structured lessons.",
+          step2Title: "Track Your Progress",
+          step2Desc : "Monitor your progress and schedule study sessions effortlessly.",
+          step3Title: "Unlock New Opportunities",
+          step3Desc : "Get support, guidance and extra resources anytime.",
+          startBtn  : "Get Started"
+        },
+        sw: {
+          step1Title: "Karibu SalFa!",
+          step1Desc : "Jifunze kwa urahisi na haraka kupitia masomo yaliyoainishwa vizuri.",
+          step2Title: "Fuatilia Maendeleo",
+          step2Desc : "Angalia maendeleo yako na panga ratiba ya masomo kwa urahisi.",
+          step3Title: "Fungua Fursa Mpya",
+          step3Desc : "Pata msaada, ushauri na rasilimali za ziada kila wakati.",
+          startBtn  : "Anza Sasa"
+        },
+        fr: {
+          step1Title: "Bienvenue chez SalFa !",
+          step1Desc : "Apprenez facilement et rapidement grâce à des leçons bien structurées.",
+          step2Title: "Suivez votre Progrès",
+          step2Desc : "Surveillez vos progrès et planifiez vos séances d'étude facilement.",
+          step3Title: "Débloquez de nouvelles Opportunités",
+          step3Desc : "Obtenez soutien, conseils et ressources supplémentaires à tout moment.",
+          startBtn  : "Commencer"
+        }
+      };
+
+      /* ------------------------------------------------------------
+         3️⃣ Apply language to DOM
+         ------------------------------------------------------------ */
+      const dict = translations[langPref] || translations.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (dict[key]) el.textContent = dict[key];
+      });
+
+      /* ------------------------------------------------------------
+         4️⃣ Onboarding flow (splash -> steps)
+         ------------------------------------------------------------ */
+      const splash = document.getElementById("splashScreen");
+      const steps  = [document.getElementById("step1"), document.getElementById("step2"), document.getElementById("step3")];
+
+      setTimeout(() => {
+        splash.style.display = "none";
+        showStep(0);
+      }, 4000);
+
+      let currentStep = 0;
+      function showStep(i) {
+        if (i > 0) steps[i - 1].style.display = "none";
+        steps[i].style.display = "block";
+        steps[i].style.animation = "fadeInUp 1s forwards";
+        currentStep = i;
+      }
+
+      const autoAdvance = setInterval(() => {
+        if (currentStep < steps.length - 1) {
+          showStep(currentStep + 1);
+        } else {
+          clearInterval(autoAdvance);
+        }
+      }, 3000);
