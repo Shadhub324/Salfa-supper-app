@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SalFa – Sign Up</title>
+
+  <style>
+    :root {
+      --primary: #ffd700;
+      --bg: #121212;
+      --fg: #fff;
+      --border: #444;
+      --error: #ff4d4d;
+      --ok: #4caf50;
+    }
+    html[data-theme="light"] {
+      --bg: #f4f4f6;
+      --fg: #111;
+      --border: #ccc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(34, 34, 34, 0.85);
+      backdrop-filter: blur(4px);
+      padding: 32px 26px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.35);
+      position: relative;
+      z-index: 5;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 24px;
+      font-size: 2rem;
+      letter-spacing: 0.08em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field {
+      position: relative;
+      margin-bottom: 18px;
+    }
+
+    .field input {
+      background: #1e1e1e;
+      border: 1.5px solid var(--border);
+      color: white;
+      padding: 12px 38px 12px 38px;
+      border-radius: 8px;
+      font-size: 1rem;
+      width: 100%;
+      transition: border-color 0.3s;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .field .icon-left {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--border);
+      user-select: none;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      user-select: none;
+      fill: var(--border);
+      transition: fill 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+    .toggle-password:hover,
+    .toggle-password:focus {
+      fill: var(--primary);
+      outline: none;
+    }
+
+    .msg {
+      min-height: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    .msg.error {
+      color: var(--error);
+    }
+
+    .msg.ok {
+      color: var(--ok);
+    }
+
+    .terms-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      user-select: none;
+      color: #ffff;
+      flex-wrap: wrap;
+    }
+
+    .terms-container input[type="checkbox"] {
+      margin-right: 8px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .terms-container label {
+      cursor: pointer;
+      user-select: none;
+      flex: 1 1 auto;
+    }
+
+    .terms-container a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .terms-container a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      background: var(--primary);
+      color: #111;
+      font-weight: 700;
+      border: none;
+      padding: 14px 0;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover:not(:disabled) {
+      background: #ffdf4f;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .signin {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    .signin a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signin a:hover {
+      color: #ffdf4f;
+    }
+
+    /* loader overlay */
+    .loader-wrap {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #555;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-wrap.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 26px 20px;
+      }
+      h2 {
+        font-size: 1.6rem;
+      }
+      button {
+        font-size: 1rem;
+      }
+      .terms-container label {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div class="loader-wrap" id="loader"><div class="loader"></div></div>
+
+  <!-- Card -->
+  <div class="card">
+    <h2 data-i18n="title">Create Account</h2>
+    <form id="signupForm" novalidate>
+      <div class="field">
+        <span class="material-icons icon-left" aria-hidden="true">mail</span>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          data-i18n-placeholder="emailPH"
+          autocomplete="email"
+          aria-describedby="emailHelp"
+        />
+      </div>
+
+      <div class="field">
+        <span class="material-icons icon-left" aria-hidden="true">lock</span>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Minimum 6 characters, with uppercase, lowercase, number & symbol"
+          required
+          data-i18n-placeholder="passPH"
+          autocomplete="new-password"
+          aria-describedby="passwordHelp"
+          aria-live="polite"
+        />
+        <span class="toggle-password" id="togglePassword" title="Show/Hide password" tabindex="0" role="button" aria-label="Toggle password visibility" aria-pressed="false">
+          <!-- Eye SVG icon -->
+          <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor" style="display: inline;">
+            <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <!-- Eye off SVG icon -->
+          <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor" style="display: none;">
+            <path d="M12 6a9.77 9.77 0 0 1 8.33 4.65 10.93 10.93 0 0 1-1.3 1.73l1.3 1.3-1.41 1.41-1.3-1.3a9.88 9.88 0 0 1-7.62 3.52 9.88 9.88 0 0 1-8.33-4.65 10.93 10.93 0 0 1 1.3-1.73l-1.3-1.3L4.4 7.39l1.3 1.3A9.77 9.77 0 0 1 12 6zM12 9a3 3 0 0 0-3 3 2.94 2.94 0 0 0 .78 2.07l4.29-4.29A2.93 2.93 0 0 0 12 9z"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="field">
+        <span class="material-icons icon-left" aria-hidden="true">lock_reset</span>
+        <input
+          type="password"
+          id="confirm"
+          name="confirm"
+          placeholder="Re‑enter password"
+          required
+          data-i18n-placeholder="confirmPH"
+          autocomplete="new-password"
+          aria-describedby="confirmHelp"
+          aria-live="polite"
+        />
+        <span class="toggle-password" id="toggleConfirm" title="Show/Hide confirm password" tabindex="0" role="button" aria-label="Toggle confirm password visibility" aria-pressed="false">
+          <!-- Eye SVG icon -->
+          <svg id="eyeOpenConfirm" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor" style="display: inline;">
+            <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          <!-- Eye off SVG icon -->
+          <svg id="eyeClosedConfirm" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20" fill="currentColor" style="display: none;">
+            <path d="M12 6a9.77 9.77 0 0 1 8.33 4.65 10.93 10.93 0 0 1-1.3 1.73l1.3 1.3-1.41 1.41-1.3-1.3a9.88 9.88 0 0 1-7.62 3.52 9.88 9.88 0 0 1-8.33-4.65 10.93 10.93 0 0 1 1.3-1.73l-1.3-1.3L4.4 7.39l1.3 1.3A9.77 9.77 0 0 1 12 6zM12 9a3 3 0 0 0-3 3 2.94 2.94 0 0 0 .78 2.07l4.29-4.29A2.93 2.93 0 0 0 12 9z"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="terms-container">
+        <input type="checkbox" id="terms" name="terms" />
+        <label for="terms" id="termsLabel">
+          I agree to the <a href="#" target="_blank" rel="noopener noreferrer">Terms & Conditions</a>
+        </label>
+      </div>
+
+      <div class="msg error" id="errorMsg" aria-live="polite"></div>
+      <div class="msg ok" id="successMsg" aria-live="polite"></div>
+
+      <button type="submit" id="submitBtn" disabled data-i18n="signupBtn">Sign Up</button>
+    </form>
+    <div class="signin" data-i18n-html="signinTxt">
+      Already have an account? <a href="signin.html">Sign In</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      sendEmailVerification,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4Mb1RIWqUnD63Q1NdbE9Nkv8QA6LBxHc",
+    authDomain: "salfa-d9e37.firebaseapp.com",
+    projectId: "salfa-d9e37",
+    storageBucket: "salfa-d9e37.firebasestorage.app",
+    messagingSenderId: "450649652235",
+    appId: "1:450649652235:web:6e3b8db8f2403833721b0e",
+    measurementId: "G-WWVNWNEG54"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.setAttribute("data-theme", mode);
+
+    const lang = localStorage.getItem("lang") || "en";
+    const i18n = {
+      en: {
+        title: "Create Account",
+        emailPH: "you@example.com",
+        passPH: "Minimum 6 characters, with uppercase, lowercase, number & symbol",
+        confirmPH: "Re‑enter password",
+        signupBtn: "Sign Up",
+        signinTxt:
+          "Already have an account? <a href='signin.html'>Sign In</a>",
+        termsText: "I agree to the ",
+        termsLinkText: "Terms & Conditions",
+        termsLinkHref: "#",
+        success: "Account created! Verification email sent.",
+        errEnterMail: "Enter your email.",
+        errValidMail: "Enter a valid email.",
+        errEnterPass: "Enter a password.",
+        errPassLen: "Password must be ≥6 characters.",
+        errMatch: "Passwords do not match.",
+        errTerms: "You must agree to the Terms & Conditions.",
+        errDuplicate: "Email already in use. Try signing in.",
+        errWeak:
+          "Weak password. Use uppercase, lowercase, number & symbol.",
+        errGeneric: "Registration failed. Please try again.",
+      },
+      sw: {
+        title: "Unda Akaunti",
+        emailPH: "wewe@mfano.com",
+        passPH: "Angalau herufi 6, zikiwa na herufi kubwa, ndogo, namba & alama",
+        confirmPH: "Rudia nenosiri",
+        signupBtn: "Jisajili",
+        signinTxt: "Tayari una akaunti? <a href='signin.html'>Ingia</a>",
+        termsText: "Ninakubali ",
+        termsLinkText: "Sheria & Masharti",
+        termsLinkHref: "#",
+        success: "Akaunti imeundwa! Email ya uthibitisho imetumwa.",
+        errEnterMail: "Weka barua pepe.",
+        errValidMail: "Weka barua pepe sahihi.",
+        errEnterPass: "Weka nenosiri.",
+        errPassLen: "Nenosiri liwe angalau herufi 6.",
+        errMatch: "Nenosiri hayafanani.",
+        errTerms: "Lazima ukubali Sheria & Masharti.",
+        errDuplicate: "Barua pepe tayari inatumika. Jaribu kuingia.",
+        errWeak:
+          "Nenosiri dhaifu. Tumia herufi kubwa, ndogo, namba & alama.",
+        errGeneric: "Usajili umeshindwa. Jaribu tena.",
+      },
+      fr: {
+        title: "Créer un compte",
+        emailPH: "vous@exemple.com",
+        passPH: "6 caractères minimum, avec majuscules, minuscules, chiffres & symboles",
+        confirmPH: "Répétez le mot de passe",
+        signupBtn: "S'inscrire",
+        signinTxt: "Vous avez déjà un compte ? <a href='signin.html'>Connexion</a>",
+        termsText: "J'accepte les ",
+        termsLinkText: "Conditions d'utilisation",
+        termsLinkHref: "#",
+        success: "Compte créé ! Email de vérification envoyé.",
+        errEnterMail: "Saisissez votre email.",
+        errValidMail: "Email invalide.",
+        errEnterPass: "Entrez un mot de passe.",
+        errPassLen: "Mot de passe ≥6 caractères.",
+        errMatch: "Les mots de passe ne correspondent pas.",
+        errTerms: "Vous devez accepter les Conditions d'utilisation.",
+        errDuplicate: "Email déjà utilisé. Essayez de vous connecter.",
+        errWeak:
+          "Mot de passe faible. Utilisez majuscules, minuscules, chiffres & symboles.",
+        errGeneric: "Échec de l'inscription. Réessayez.",
+      },
+    };
+
+    function applyI18n() {
+      const dict = i18n[lang] || i18n.en;
+      document.querySelectorAll("[data-i18n]").forEach(
+        (el) => (el.textContent = dict[el.dataset.i18n])
+      );
+      document.querySelectorAll("[data-i18n-html]").forEach(
+        (el) => (el.innerHTML = dict[el.dataset.i18nHtml])
+      );
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(
+        (el) => (el.placeholder = dict[el.dataset.i18nPlaceholder])
+      );
+      // Update Terms & Conditions text dynamically
+      const termsLabel = document.getElementById("termsLabel");
+      if (termsLabel) {
+        termsLabel.innerHTML =
+          dict.termsText +
+          `<a href="${dict.termsLinkHref}" target="_blank" rel="noopener noreferrer">${dict.termsLinkText}</a>`;
+      }
+    }
+    applyI18n();
+
+    // --- Elements
+    const form = document.getElementById("signupForm");
+    const errorMsg = document.getElementById("errorMsg");
+    const successMsg = document.getElementById("successMsg");
+    const loader = document.getElementById("loader");
+    const btn = document.getElementById("submitBtn");
+
+    const emailInput = form.email;
+    const passwordInput = form.password;
+    const confirmInput = form.confirm;
+    const termsCheckbox = document.getElementById("terms");
+
+    const togglePasswordBtn = document.getElementById("togglePassword");
+    const toggleConfirmBtn = document.getElementById("toggleConfirm");
+
+    // Password toggle handlers
+    togglePasswordBtn.addEventListener("click", () => {
+      toggleVisibility(passwordInput, togglePasswordBtn, 'eyeOpen', 'eyeClosed');
+    });
+    toggleConfirmBtn.addEventListener("click", () => {
+      toggleVisibility(confirmInput, toggleConfirmBtn, 'eyeOpenConfirm', 'eyeClosedConfirm');
+    });
+
+    togglePasswordBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        togglePasswordBtn.click();
+      }
+    });
+    toggleConfirmBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleConfirmBtn.click();
+      }
+    });
+
+    function toggleVisibility(input, btn, openId, closedId) {
+      const eyeOpen = btn.querySelector(`#${openId}`);
+      const eyeClosed = btn.querySelector(`#${closedId}`);
+      if (input.type === "password") {
+        input.type = "text";
+        if (eyeOpen) eyeOpen.style.display = "none";
+        if (eyeClosed) eyeClosed.style.display = "inline";
+        btn.setAttribute("aria-pressed", "true");
+      } else {
+        input.type = "password";
+        if (eyeOpen) eyeOpen.style.display = "inline";
+        if (eyeClosed) eyeClosed.style.display = "none";
+        btn.setAttribute("aria-pressed", "false");
+      }
+    }
+
+    // Validation & button enable/disable logic
+    function validateForm() {
+      clearMsgs();
+      let valid = true;
+
+      const email = emailInput.value.trim();
+      const pass = passwordInput.value.trim();
+      const conf = confirmInput.value.trim();
+      const termsChecked = termsCheckbox.checked;
+
+      // Password strength regexes
+      const hasUpper = /[A-Z]/.test(pass);
+      const hasLower = /[a-z]/.test(pass);
+      const hasNum = /[0-9]/.test(pass);
+      const hasSym = /[^A-Za-z0-9]/.test(pass);
+
+      if (!email) {
+        showError(i18n[lang].errEnterMail);
+        valid = false;
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError(i18n[lang].errValidMail);
+        valid = false;
+      } else if (!pass) {
+        showError(i18n[lang].errEnterPass);
+        valid = false;
+      } else if (pass.length < 6) {
+        showError(i18n[lang].errPassLen);
+        valid = false;
+      } else if (!(hasUpper && hasLower && hasNum && hasSym)) {
+        showError(i18n[lang].errWeak);
+        valid = false;
+      } else if (pass !== conf) {
+        showError(i18n[lang].errMatch);
+        valid = false;
+      } else if (!termsChecked) {
+        showError(i18n[lang].errTerms);
+        valid = false;
+      }
+
+      btn.disabled = !valid;
+      return valid;
+    }
+
+    function clearMsgs() {
+      errorMsg.textContent = "";
+      successMsg.textContent = "";
+    }
+
+    function showError(msg) {
+      errorMsg.textContent = msg;
+      successMsg.textContent = "";
+    }
+
+    function showSuccess(msg) {
+      successMsg.textContent = msg;
+      errorMsg.textContent = "";
+    }
+
+    // Enable button on input changes
+    [emailInput, passwordInput, confirmInput, termsCheckbox].forEach((el) =>
+      el.addEventListener("input", validateForm)
+    );
+    termsCheckbox.addEventListener("change", validateForm);
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMsgs();
+      if (!validateForm()) return;
+
+      loader.classList.add("show");
+      btn.disabled = true;
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          emailInput.value.trim(),
+          passwordInput.value.trim()
+        );
+        await sendEmailVerification(userCredential.user);
+        showSuccess(i18n[lang].success);
+        form.reset();
+        btn.disabled = true;
+      } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+          showError(i18n[lang].errDuplicate);
+        } else {
+          showError(i18n[lang].errGeneric);
+        }
+      } finally {
+        loader.classList.remove("show");
+      }
+    });
+
+    validateForm();
+  </script>
+
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+</body>
+</html>
