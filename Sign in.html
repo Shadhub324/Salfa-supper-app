@@ -294,8 +294,9 @@
           await signOut(auth);
           errorMsg.textContent = i18n[lang].verifyMsg;
         } else {
-          successMsg.textContent = i18n[lang].success;
-          setTimeout(() => window.location.href = 'dashboard.html', 1500);
+          await signInWithEmailAndPassword(auth,email,pass);
+        successMsg.textContent = 'Login successful! Redirecting…';
+        setTimeout(()=>window.location.href='dashboard.html',1500);
         }
       } catch (err) {
         errorMsg.textContent = mapError(err.code);
